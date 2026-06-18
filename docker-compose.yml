@@ -1,0 +1,76 @@
+services:
+  library:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./src:/service/src
+      - ./alembic.ini:/service/alembic.ini
+    networks:
+      - library-network
+    restart: on-failure
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: cram_library_pg
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: library_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata_library:/var/lib/postgresql/data
+    networks:
+      - library-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d cram_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: library_minio
+    ports:
+      - "9100:9000"
+      - "9101:9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123
+    volumes:
+      - ./minio_data:/data
+    networks:
+      - library-network
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: [ "CMD-SHELL", "mc ready local" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    container_name: library_redis
+    command: [ "redis-server", "--appendonly", "yes" ]
+    ports:
+      - "16379:6379"
+    volumes:
+      - redisdata_library:/data
+    networks:
+      - library-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pgdata_library:
+  redisdata_library:
+
+networks:
+  library-network:
+    driver: bridge
