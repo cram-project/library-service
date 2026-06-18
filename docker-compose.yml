@@ -51,25 +51,37 @@ services:
       timeout: 5s
       retries: 3
 
-  redis:
-    image: redis:7-alpine
-    container_name: library_redis
-    command: [ "redis-server", "--appendonly", "yes" ]
+  rabbitmq_1:
+    image: rabbitmq:4-management
+    container_name: rabbitmq_first
     ports:
-      - "16379:6379"
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     volumes:
-      - redisdata_library:/data
-    networks:
-      - library-network
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+      - rabbitmq_data_1:/var/lib/rabbitmq
+    restart: always
+
+  rabbitmq_2:
+    image: rabbitmq:4-management
+    container_name: rabbitmq_second
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: adminpass
+    volumes:
+      - rabbitmq_data_2:/var/lib/rabbitmq
+    restart: always
+
 
 volumes:
   pgdata_library:
-  redisdata_library:
+  rabbitmq_data_1:
+  rabbitmq_data_2:
 
 networks:
   library-network:
