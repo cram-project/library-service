@@ -28,7 +28,6 @@ class LibraryCreateSchema(BaseModel):
     document_url: str
     title: str
     file_type: str
-    minio_raw_key: str
 
     minio_compressed_key: Optional[str] = None
     original_size: Optional[int] = None
