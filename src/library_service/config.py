@@ -1,4 +1,6 @@
+import os
 from os import getenv
+import aioboto3
 
 
 class Settings:
@@ -8,10 +10,18 @@ class Settings:
     DB_USER: str = getenv("DB_USER", "admin")
     DB_PASSWORD: str = getenv("DB_PASSWORD", "admin")
 
-    # SECRET_KEY: str = getenv("SECRET_KEY")
-    # ALGORITHM: str = "HS256"
-    # ACCESS_EXPIRE_MIN: int = 15
-    # REFRESH_EXPIRE_DAYS: int = 30
+    SECRET_KEY: str = getenv("SECRET_KEY")
+    ALGORITHM: str = "HS256"
+    ACCESS_EXPIRE_MIN: int = 15
+    REFRESH_EXPIRE_DAYS: int = 30
+
+    PUBLIC_BASE_URL: str = ""
+    LOCAL_BASE_URL: str = "http://localhost:8002"
+
+    MINIO_ENDPOINT: str | None = os.getenv("MINIO_ENDPOINT")
+    MINIO_ACCESS_KEY: str | None = os.getenv("MINIO_ACCESS_KEY")
+    MINIO_SECRET_KEY: str | None = os.getenv("MINIO_SECRET_KEY")
+    MINIO_BUCKET: str | None = os.getenv("MINIO_BUCKET")
 
     @property
     def DATABASE_URL(self) -> str:
@@ -39,3 +49,4 @@ class Settings:
 
 
 settings = Settings()
+session_minio = aioboto3.Session()
