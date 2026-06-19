@@ -6,11 +6,11 @@ from sqlalchemy import pool
 from alembic import context
 
 from src.library_service.infrastructure.database.base import Base
+from src.library_service.infrastructure.database.models import Library
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
