@@ -15,7 +15,6 @@ class Library(Base):
     document_url: Mapped[str] = mapped_column(String(1024))
     title: Mapped[str] = mapped_column(String(500))
     file_type: Mapped[str] = mapped_column(String(20))
-    minio_raw_key: Mapped[str] = mapped_column(String(512), unique=True)
     minio_compressed_key: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
