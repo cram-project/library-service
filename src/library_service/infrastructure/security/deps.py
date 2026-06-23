@@ -25,7 +25,7 @@ async def get_current_user(
     if not payload:
         raise credentials_exception
 
-    user_id = payload.get("id")
+    user_id = payload.get("user_id")
     username = payload.get("username")
     is_staff = payload.get("is_staff")
     if user_id is None or username is None:

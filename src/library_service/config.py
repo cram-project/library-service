@@ -18,10 +18,10 @@ class Settings:
     PUBLIC_BASE_URL: str = ""
     LOCAL_BASE_URL: str = "http://localhost:8002"
 
-    MINIO_ENDPOINT: str | None = os.getenv("MINIO_ENDPOINT")
-    MINIO_ACCESS_KEY: str | None = os.getenv("MINIO_ACCESS_KEY")
-    MINIO_SECRET_KEY: str | None = os.getenv("MINIO_SECRET_KEY")
-    MINIO_BUCKET: str | None = os.getenv("MINIO_BUCKET")
+    MINIO_ENDPOINT: str = os.getenv("MINIO_ENDPOINT", "http://localhost:9100")
+    MINIO_ACCESS_KEY: str = os.getenv("MINIO_ACCESS_KEY", "admin")
+    MINIO_SECRET_KEY: str = os.getenv("MINIO_SECRET_KEY", "password123")
+    MINIO_BUCKET: str = os.getenv("MINIO_BUCKET", "library-documents")
 
     @property
     def DATABASE_URL(self) -> str:

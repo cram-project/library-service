@@ -6,9 +6,15 @@ services:
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: password123
+      MINIO_BUCKET: library-documents
     depends_on:
       postgres:
         condition: service_healthy
+      minio:
+        condition: service_started
     ports:
       - "8002:8000"
     volumes:
@@ -51,11 +57,6 @@ services:
     networks:
       - library-network
     command: server /data --console-address ":9001"
-    healthcheck:
-      test: [ "CMD-SHELL", "mc ready local" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
 
   rabbitmq_1:
     image: rabbitmq:4-management

@@ -43,3 +43,15 @@ class DocumentStorage:
             content_type = response.get("ContentType", "application/octet-stream")
 
             return data, content_type
+
+    async def delete_object(self, key: str):
+        async with session_minio.client(
+                "s3",
+                endpoint_url=self._settings.MINIO_ENDPOINT,
+                aws_access_key_id=self._settings.MINIO_ACCESS_KEY,
+                aws_secret_access_key=self._settings.MINIO_SECRET_KEY,
+        ) as s3:
+            await s3.delete_object(
+                Bucket=self._settings.MINIO_BUCKET,
+                Key=key,
+            )
